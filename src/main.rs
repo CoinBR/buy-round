@@ -20,7 +20,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let event = TestEvent {
         id: Uuid::new_v4().to_string(),
-        important_data: "I wrote my first event!".to_string(),
+        important_data: "I wrote my first event! aaa".to_string(),
     };
 
     let event_data = EventData::json("TestEvent", event)?.id(Uuid::new_v4());
@@ -32,10 +32,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let options = ReadStreamOptions::default().max_count(10);
     let mut stream = client.read_stream("some-stream", &options).await?;
 
+
     while let Some(event) = stream.next().await? {
-        let c = event.event.unwrap().data.
-        println!("{}", c)
+        let c = event.event.unwrap().data;
+        let c_string = String::from_utf8_lossy(&c);
+        println!("{}", c_string);
     }
+
 
     Ok(())
 
