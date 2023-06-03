@@ -1,0 +1,9 @@
+pairs:
+  # <initials>: <Firstname> <Lastname>[; <email-id>]
+  pa: CoinBR; coinbr@gmail.com
+  coinbr: CoinBR; coinbr@gmail.com
+
+email:
+  prefix: pair
+  no_solo_prefix: true
+global: false  # Set to true for git-pair to change git configuration for all your projects
