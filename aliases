@@ -1,3 +1,2 @@
-alias ,sv='cargo run'
-alias ,up='docker-compose up'
-alias ,down='docker-compose down'
+alias ,sv='./run.sh local_server'
+alias ,up='./run.sh local_db'
