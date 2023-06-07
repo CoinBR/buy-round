@@ -4,6 +4,7 @@ services:
 
   db:
     image: eventstore/eventstore:latest
+    command: --mem-db
     environment:
       - EVENTSTORE_INSECURE=true # let eventstore run without certificate
       - EVENTSTORE_EXT_TCP_PORT=1113 # set internal tcp port as number

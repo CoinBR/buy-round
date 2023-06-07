@@ -23,5 +23,10 @@ local_server(){
   env `cat $local_env_file` cargo run
 }
 
+test() {
+  :
+  # aaa
+}
+
 
 "$@"

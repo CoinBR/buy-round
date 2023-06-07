@@ -6,6 +6,14 @@ use std::error::Error;
 use tokio::runtime::Runtime;
 use uuid::Uuid;
 
+
+mod config {
+    pub mod eventstoreclient;
+}
+
+use config::eventstoreclient;
+
+
 #[derive(Serialize, Deserialize)]
 struct TestEvent{
     id: String,
