@@ -1,15 +1,9 @@
-use eventstore::{
-    Client, Credentials, EventData,  StreamPosition, ReadStreamOptions
-};
+use eventstore::{Client, Credentials, EventData, ReadStreamOptions, StreamPosition};
+use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
+use std::env;
 use std::error::Error;
 use tokio::runtime::Runtime;
-use uuid::Uuid;o
-use std::env;
-use lazy_static::lazy_static;
-
-
-
 
 struct ConnectionInfo {
     ip: String,
@@ -27,24 +21,27 @@ impl ConnectionInfo {
         Ok(ConnectionInfo { ip, port, settings })
     }
 
-    fn connection_string()
-}
-
-pub struct EventStoreClient {
-
-
+    fn get_connection_string(&self) -> String {
+        format!(
+            "esdb+discover://{}:{}?{}",
+            self.ip, self.port, self.settings
+        )
+    }
 }
 
 lazy_static! {
-    pub static ref CLIENT: Client = Client::new();
+    // ES == EventStore Client
+    pub static ref CLIENT: Client = {
 
+        let connection_info = ConnectionInfo::from_env().unwrap_or_else(|_| {
+            panic!("Unable to get EventStore connection info from environment");
+        });
 
-
-
+        Client::new(connection_info.get_connection_string()).unwrap_or_else(|_| {
+            panic!("Unable to connect to EventStore")
+        })
+    };
 }
-
-
-
 
 // #[tokio::main]
 // async fn main() -> Result<(), Box<dyn Error>> {
@@ -77,4 +74,3 @@ lazy_static! {
 //     Ok(())
 //
 // }
-

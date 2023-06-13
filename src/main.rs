@@ -1,30 +1,27 @@
-use eventstore::{
-    Client, Credentials, EventData,  StreamPosition, ReadStreamOptions
-};
+use eventstore::{Credentials, EventData, ReadStreamOptions, StreamPosition};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use tokio::runtime::Runtime;
 use uuid::Uuid;
 
-
 mod config {
     pub mod eventstoreclient;
 }
 
-use config::eventstoreclient;
-
+use config::eventstoreclient::CLIENT;
 
 #[derive(Serialize, Deserialize)]
-struct TestEvent{
+struct TestEvent {
     id: String,
     important_data: String,
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    // let settings = "esdb+discover://127.0.0.1:2113?tls=false&keepAliveTimeout=10000&keepAliveInterval=10000".parse()?;
+    // let client = Client::new(settings)?;
 
-    let settings = "esdb+discover://127.0.0.1:2113?tls=false&keepAliveTimeout=10000&keepAliveInterval=10000".parse()?;
-    let client = Client::new(settings)?;
+    let client = &CLIENT;
 
     let event = TestEvent {
         id: Uuid::new_v4().to_string(),
@@ -40,17 +37,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let options = ReadStreamOptions::default().max_count(10);
     let mut stream = client.read_stream("some-stream", &options).await?;
 
-
     while let Some(event) = stream.next().await? {
         let c = event.event.unwrap().data;
         let c_string = String::from_utf8_lossy(&c);
         println!("{}", c_string);
     }
 
-
     Ok(())
-
-
 
     // let user = User {
     //     username: "test_user".to_string(),
@@ -87,4 +80,3 @@ async fn main() -> Result<(), Box<dyn Error>> {
     //
     // Ok(())
 }
-
